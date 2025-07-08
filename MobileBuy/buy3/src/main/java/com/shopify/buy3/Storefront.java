@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Storefront {
-    public static final String API_VERSION = "2025-04";
+    public static final String API_VERSION = "2025-07";
 
     public static QueryRootQuery query(QueryRootQueryDefinition queryDef) {
         return query(Collections.emptyList(), queryDef);
@@ -12580,6 +12580,11 @@ public class Storefront {
         ADDRESS_FIELD_IS_TOO_LONG,
 
         /**
+        * The cart is too large to save.
+        */
+        CART_TOO_LARGE,
+
+        /**
         * The input value is invalid.
         */
         INVALID,
@@ -12623,6 +12628,11 @@ public class Storefront {
         * The payment wasn't valid.
         */
         INVALID_PAYMENT,
+
+        /**
+        * The payment is invalid. Deferred payment is required.
+        */
+        INVALID_PAYMENT_DEFERRED_PAYMENT_REQUIRED,
 
         /**
         * Cannot update payment on an empty cart
@@ -12730,14 +12740,34 @@ public class Storefront {
         PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR,
 
         /**
+        * The payment method is not applicable.
+        */
+        PAYMENT_METHOD_NOT_APPLICABLE,
+
+        /**
         * The payment method is not supported.
         */
         PAYMENT_METHOD_NOT_SUPPORTED,
 
         /**
+        * The delivery group is in a pending state.
+        */
+        PENDING_DELIVERY_GROUPS,
+
+        /**
         * The given province cannot be found.
         */
         PROVINCE_NOT_FOUND,
+
+        /**
+        * Selling plan is not applicable.
+        */
+        SELLING_PLAN_NOT_APPLICABLE,
+
+        /**
+        * An error occurred while saving the cart.
+        */
+        SERVICE_UNAVAILABLE,
 
         /**
         * Too many delivery addresses on Cart.
@@ -12753,6 +12783,11 @@ public class Storefront {
         * Validation failed.
         */
         VALIDATION_CUSTOM,
+
+        /**
+        * Variant can only be purchased with a selling plan.
+        */
+        VARIANT_REQUIRES_SELLING_PLAN,
 
         /**
         * The given zip code is unsupported.
@@ -12791,6 +12826,10 @@ public class Storefront {
                     return ADDRESS_FIELD_IS_TOO_LONG;
                 }
 
+                case "CART_TOO_LARGE": {
+                    return CART_TOO_LARGE;
+                }
+
                 case "INVALID": {
                     return INVALID;
                 }
@@ -12825,6 +12864,10 @@ public class Storefront {
 
                 case "INVALID_PAYMENT": {
                     return INVALID_PAYMENT;
+                }
+
+                case "INVALID_PAYMENT_DEFERRED_PAYMENT_REQUIRED": {
+                    return INVALID_PAYMENT_DEFERRED_PAYMENT_REQUIRED;
                 }
 
                 case "INVALID_PAYMENT_EMPTY_CART": {
@@ -12911,12 +12954,28 @@ public class Storefront {
                     return PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR;
                 }
 
+                case "PAYMENT_METHOD_NOT_APPLICABLE": {
+                    return PAYMENT_METHOD_NOT_APPLICABLE;
+                }
+
                 case "PAYMENT_METHOD_NOT_SUPPORTED": {
                     return PAYMENT_METHOD_NOT_SUPPORTED;
                 }
 
+                case "PENDING_DELIVERY_GROUPS": {
+                    return PENDING_DELIVERY_GROUPS;
+                }
+
                 case "PROVINCE_NOT_FOUND": {
                     return PROVINCE_NOT_FOUND;
+                }
+
+                case "SELLING_PLAN_NOT_APPLICABLE": {
+                    return SELLING_PLAN_NOT_APPLICABLE;
+                }
+
+                case "SERVICE_UNAVAILABLE": {
+                    return SERVICE_UNAVAILABLE;
                 }
 
                 case "TOO_MANY_DELIVERY_ADDRESSES": {
@@ -12929,6 +12988,10 @@ public class Storefront {
 
                 case "VALIDATION_CUSTOM": {
                     return VALIDATION_CUSTOM;
+                }
+
+                case "VARIANT_REQUIRES_SELLING_PLAN": {
+                    return VARIANT_REQUIRES_SELLING_PLAN;
                 }
 
                 case "ZIP_CODE_NOT_SUPPORTED": {
@@ -12966,6 +13029,10 @@ public class Storefront {
                     return "ADDRESS_FIELD_IS_TOO_LONG";
                 }
 
+                case CART_TOO_LARGE: {
+                    return "CART_TOO_LARGE";
+                }
+
                 case INVALID: {
                     return "INVALID";
                 }
@@ -13000,6 +13067,10 @@ public class Storefront {
 
                 case INVALID_PAYMENT: {
                     return "INVALID_PAYMENT";
+                }
+
+                case INVALID_PAYMENT_DEFERRED_PAYMENT_REQUIRED: {
+                    return "INVALID_PAYMENT_DEFERRED_PAYMENT_REQUIRED";
                 }
 
                 case INVALID_PAYMENT_EMPTY_CART: {
@@ -13086,12 +13157,28 @@ public class Storefront {
                     return "PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR";
                 }
 
+                case PAYMENT_METHOD_NOT_APPLICABLE: {
+                    return "PAYMENT_METHOD_NOT_APPLICABLE";
+                }
+
                 case PAYMENT_METHOD_NOT_SUPPORTED: {
                     return "PAYMENT_METHOD_NOT_SUPPORTED";
                 }
 
+                case PENDING_DELIVERY_GROUPS: {
+                    return "PENDING_DELIVERY_GROUPS";
+                }
+
                 case PROVINCE_NOT_FOUND: {
                     return "PROVINCE_NOT_FOUND";
+                }
+
+                case SELLING_PLAN_NOT_APPLICABLE: {
+                    return "SELLING_PLAN_NOT_APPLICABLE";
+                }
+
+                case SERVICE_UNAVAILABLE: {
+                    return "SERVICE_UNAVAILABLE";
                 }
 
                 case TOO_MANY_DELIVERY_ADDRESSES: {
@@ -13104,6 +13191,10 @@ public class Storefront {
 
                 case VALIDATION_CUSTOM: {
                     return "VALIDATION_CUSTOM";
+                }
+
+                case VARIANT_REQUIRES_SELLING_PLAN: {
+                    return "VARIANT_REQUIRES_SELLING_PLAN";
                 }
 
                 case ZIP_CODE_NOT_SUPPORTED: {
@@ -17068,6 +17159,171 @@ public class Storefront {
         }
     }
 
+    public interface CartRemovePersonalDataPayloadQueryDefinition {
+        void define(CartRemovePersonalDataPayloadQuery _queryBuilder);
+    }
+
+    /**
+    * Return type for `cartRemovePersonalData` mutation.
+    */
+    public static class CartRemovePersonalDataPayloadQuery extends Query<CartRemovePersonalDataPayloadQuery> {
+        CartRemovePersonalDataPayloadQuery(StringBuilder _queryBuilder) {
+            super(_queryBuilder);
+        }
+
+        /**
+        * The updated cart.
+        */
+        public CartRemovePersonalDataPayloadQuery cart(CartQueryDefinition queryDef) {
+            startField("cart");
+
+            _queryBuilder.append('{');
+            queryDef.define(new CartQuery(_queryBuilder));
+            _queryBuilder.append('}');
+
+            return this;
+        }
+
+        /**
+        * The list of errors that occurred from executing the mutation.
+        */
+        public CartRemovePersonalDataPayloadQuery userErrors(CartUserErrorQueryDefinition queryDef) {
+            startField("userErrors");
+
+            _queryBuilder.append('{');
+            queryDef.define(new CartUserErrorQuery(_queryBuilder));
+            _queryBuilder.append('}');
+
+            return this;
+        }
+
+        /**
+        * A list of warnings that occurred during the mutation.
+        */
+        public CartRemovePersonalDataPayloadQuery warnings(CartWarningQueryDefinition queryDef) {
+            startField("warnings");
+
+            _queryBuilder.append('{');
+            queryDef.define(new CartWarningQuery(_queryBuilder));
+            _queryBuilder.append('}');
+
+            return this;
+        }
+    }
+
+    /**
+    * Return type for `cartRemovePersonalData` mutation.
+    */
+    public static class CartRemovePersonalDataPayload extends AbstractResponse<CartRemovePersonalDataPayload> {
+        public CartRemovePersonalDataPayload() {
+        }
+
+        public CartRemovePersonalDataPayload(JsonObject fields) throws SchemaViolationError {
+            for (Map.Entry<String, JsonElement> field : fields.entrySet()) {
+                String key = field.getKey();
+                String fieldName = getFieldName(key);
+                switch (fieldName) {
+                    case "cart": {
+                        Cart optional1 = null;
+                        if (!field.getValue().isJsonNull()) {
+                            optional1 = new Cart(jsonAsObject(field.getValue(), key));
+                        }
+
+                        responseData.put(key, optional1);
+
+                        break;
+                    }
+
+                    case "userErrors": {
+                        List<CartUserError> list1 = new ArrayList<>();
+                        for (JsonElement element1 : jsonAsArray(field.getValue(), key)) {
+                            list1.add(new CartUserError(jsonAsObject(element1, key)));
+                        }
+
+                        responseData.put(key, list1);
+
+                        break;
+                    }
+
+                    case "warnings": {
+                        List<CartWarning> list1 = new ArrayList<>();
+                        for (JsonElement element1 : jsonAsArray(field.getValue(), key)) {
+                            list1.add(new CartWarning(jsonAsObject(element1, key)));
+                        }
+
+                        responseData.put(key, list1);
+
+                        break;
+                    }
+
+                    case "__typename": {
+                        responseData.put(key, jsonAsString(field.getValue(), key));
+                        break;
+                    }
+                    default: {
+                        throw new SchemaViolationError(this, key, field.getValue());
+                    }
+                }
+            }
+        }
+
+        public String getGraphQlTypeName() {
+            return "CartRemovePersonalDataPayload";
+        }
+
+        /**
+        * The updated cart.
+        */
+
+        public Cart getCart() {
+            return (Cart) get("cart");
+        }
+
+        public CartRemovePersonalDataPayload setCart(Cart arg) {
+            optimisticData.put(getKey("cart"), arg);
+            return this;
+        }
+
+        /**
+        * The list of errors that occurred from executing the mutation.
+        */
+
+        public List<CartUserError> getUserErrors() {
+            return (List<CartUserError>) get("userErrors");
+        }
+
+        public CartRemovePersonalDataPayload setUserErrors(List<CartUserError> arg) {
+            optimisticData.put(getKey("userErrors"), arg);
+            return this;
+        }
+
+        /**
+        * A list of warnings that occurred during the mutation.
+        */
+
+        public List<CartWarning> getWarnings() {
+            return (List<CartWarning>) get("warnings");
+        }
+
+        public CartRemovePersonalDataPayload setWarnings(List<CartWarning> arg) {
+            optimisticData.put(getKey("warnings"), arg);
+            return this;
+        }
+
+        @Override
+        public boolean unwrapsToObject(String key) {
+            switch (getFieldName(key)) {
+                case "cart": return true;
+
+                case "userErrors": return true;
+
+                case "warnings": return true;
+
+                default: return false;
+            }
+        }
+    }
+
     public interface CartSelectableAddressQueryDefinition {
         void define(CartSelectableAddressQuery _queryBuilder);
     }
@@ -18634,6 +18890,66 @@ public class Storefront {
     */
     public enum CartWarningCode {
         /**
+        * The discount code cannot be honored.
+        */
+        DISCOUNT_CODE_NOT_HONOURED,
+
+        /**
+        * The discount is currently inactive.
+        */
+        DISCOUNT_CURRENTLY_INACTIVE,
+
+        /**
+        * The customer is not eligible for this discount.
+        */
+        DISCOUNT_CUSTOMER_NOT_ELIGIBLE,
+
+        /**
+        * The customer's discount usage limit has been reached.
+        */
+        DISCOUNT_CUSTOMER_USAGE_LIMIT_REACHED,
+
+        /**
+        * An eligible customer is missing for this discount.
+        */
+        DISCOUNT_ELIGIBLE_CUSTOMER_MISSING,
+
+        /**
+        * The purchase type is incompatible with this discount.
+        */
+        DISCOUNT_INCOMPATIBLE_PURCHASE_TYPE,
+
+        /**
+        * The discount was not found.
+        */
+        DISCOUNT_NOT_FOUND,
+
+        /**
+        * There are no entitled line items for this discount.
+        */
+        DISCOUNT_NO_ENTITLED_LINE_ITEMS,
+
+        /**
+        * There are no entitled shipping lines for this discount.
+        */
+        DISCOUNT_NO_ENTITLED_SHIPPING_LINES,
+
+        /**
+        * The purchase is not in range for this discount.
+        */
+        DISCOUNT_PURCHASE_NOT_IN_RANGE,
+
+        /**
+        * The quantity is not in range for this discount.
+        */
+        DISCOUNT_QUANTITY_NOT_IN_RANGE,
+
+        /**
+        * The discount usage limit has been reached.
+        */
+        DISCOUNT_USAGE_LIMIT_REACHED,
+
+        /**
         * A delivery address with the same details already exists on this cart.
         */
         DUPLICATE_DELIVERY_ADDRESS,
@@ -18661,6 +18977,54 @@ public class Storefront {
             }
 
             switch (value) {
+                case "DISCOUNT_CODE_NOT_HONOURED": {
+                    return DISCOUNT_CODE_NOT_HONOURED;
+                }
+
+                case "DISCOUNT_CURRENTLY_INACTIVE": {
+                    return DISCOUNT_CURRENTLY_INACTIVE;
+                }
+
+                case "DISCOUNT_CUSTOMER_NOT_ELIGIBLE": {
+                    return DISCOUNT_CUSTOMER_NOT_ELIGIBLE;
+                }
+
+                case "DISCOUNT_CUSTOMER_USAGE_LIMIT_REACHED": {
+                    return DISCOUNT_CUSTOMER_USAGE_LIMIT_REACHED;
+                }
+
+                case "DISCOUNT_ELIGIBLE_CUSTOMER_MISSING": {
+                    return DISCOUNT_ELIGIBLE_CUSTOMER_MISSING;
+                }
+
+                case "DISCOUNT_INCOMPATIBLE_PURCHASE_TYPE": {
+                    return DISCOUNT_INCOMPATIBLE_PURCHASE_TYPE;
+                }
+
+                case "DISCOUNT_NOT_FOUND": {
+                    return DISCOUNT_NOT_FOUND;
+                }
+
+                case "DISCOUNT_NO_ENTITLED_LINE_ITEMS": {
+                    return DISCOUNT_NO_ENTITLED_LINE_ITEMS;
+                }
+
+                case "DISCOUNT_NO_ENTITLED_SHIPPING_LINES": {
+                    return DISCOUNT_NO_ENTITLED_SHIPPING_LINES;
+                }
+
+                case "DISCOUNT_PURCHASE_NOT_IN_RANGE": {
+                    return DISCOUNT_PURCHASE_NOT_IN_RANGE;
+                }
+
+                case "DISCOUNT_QUANTITY_NOT_IN_RANGE": {
+                    return DISCOUNT_QUANTITY_NOT_IN_RANGE;
+                }
+
+                case "DISCOUNT_USAGE_LIMIT_REACHED": {
+                    return DISCOUNT_USAGE_LIMIT_REACHED;
+                }
+
                 case "DUPLICATE_DELIVERY_ADDRESS": {
                     return DUPLICATE_DELIVERY_ADDRESS;
                 }
@@ -18684,6 +19048,54 @@ public class Storefront {
         }
         public String toString() {
             switch (this) {
+                case DISCOUNT_CODE_NOT_HONOURED: {
+                    return "DISCOUNT_CODE_NOT_HONOURED";
+                }
+
+                case DISCOUNT_CURRENTLY_INACTIVE: {
+                    return "DISCOUNT_CURRENTLY_INACTIVE";
+                }
+
+                case DISCOUNT_CUSTOMER_NOT_ELIGIBLE: {
+                    return "DISCOUNT_CUSTOMER_NOT_ELIGIBLE";
+                }
+
+                case DISCOUNT_CUSTOMER_USAGE_LIMIT_REACHED: {
+                    return "DISCOUNT_CUSTOMER_USAGE_LIMIT_REACHED";
+                }
+
+                case DISCOUNT_ELIGIBLE_CUSTOMER_MISSING: {
+                    return "DISCOUNT_ELIGIBLE_CUSTOMER_MISSING";
+                }
+
+                case DISCOUNT_INCOMPATIBLE_PURCHASE_TYPE: {
+                    return "DISCOUNT_INCOMPATIBLE_PURCHASE_TYPE";
+                }
+
+                case DISCOUNT_NOT_FOUND: {
+                    return "DISCOUNT_NOT_FOUND";
+                }
+
+                case DISCOUNT_NO_ENTITLED_LINE_ITEMS: {
+                    return "DISCOUNT_NO_ENTITLED_LINE_ITEMS";
+                }
+
+                case DISCOUNT_NO_ENTITLED_SHIPPING_LINES: {
+                    return "DISCOUNT_NO_ENTITLED_SHIPPING_LINES";
+                }
+
+                case DISCOUNT_PURCHASE_NOT_IN_RANGE: {
+                    return "DISCOUNT_PURCHASE_NOT_IN_RANGE";
+                }
+
+                case DISCOUNT_QUANTITY_NOT_IN_RANGE: {
+                    return "DISCOUNT_QUANTITY_NOT_IN_RANGE";
+                }
+
+                case DISCOUNT_USAGE_LIMIT_REACHED: {
+                    return "DISCOUNT_USAGE_LIMIT_REACHED";
+                }
+
                 case DUPLICATE_DELIVERY_ADDRESS: {
                     return "DUPLICATE_DELIVERY_ADDRESS";
                 }
@@ -36530,6 +36942,17 @@ public class Storefront {
             return this;
         }
 
+        /**
+        * The ThumbHash of the image.
+        * Useful to display placeholder images while the original image is loading.
+        * See https://evanw.github.io/thumbhash/ for details on how to use it.
+        */
+        public ImageQuery thumbhash() {
+            startField("thumbhash");
+
+            return this;
+        }
+
         public class TransformedSrcArguments extends Arguments {
             TransformedSrcArguments(StringBuilder _queryBuilder) {
                 super(_queryBuilder, true);
@@ -36748,6 +37171,17 @@ public class Storefront {
                         break;
                     }
 
+                    case "thumbhash": {
+                        String optional1 = null;
+                        if (!field.getValue().isJsonNull()) {
+                            optional1 = jsonAsString(field.getValue(), key);
+                        }
+
+                        responseData.put(key, optional1);
+
+                        break;
+                    }
+
                     case "transformedSrc": {
                         responseData.put(key, jsonAsString(field.getValue(), key));
 
@@ -36856,6 +37290,21 @@ public class Storefront {
 
         public Image setSrc(String arg) {
             optimisticData.put(getKey("src"), arg);
+            return this;
+        }
+
+        /**
+        * The ThumbHash of the image.
+        * Useful to display placeholder images while the original image is loading.
+        * See https://evanw.github.io/thumbhash/ for details on how to use it.
+        */
+
+        public String getThumbhash() {
+            return (String) get("thumbhash");
+        }
+
+        public Image setThumbhash(String arg) {
+            optimisticData.put(getKey("thumbhash"), arg);
             return this;
         }
 
@@ -48301,6 +48750,24 @@ public class Storefront {
         }
 
         /**
+        * Removes personally identifiable information from the cart.
+        */
+        public MutationQuery cartRemovePersonalData(ID cartId, CartRemovePersonalDataPayloadQueryDefinition queryDef) {
+            startField("cartRemovePersonalData");
+
+            _queryBuilder.append("(cartId:");
+            Query.appendQuotedString(_queryBuilder, cartId.toString());
+
+            _queryBuilder.append(')');
+
+            _queryBuilder.append('{');
+            queryDef.define(new CartRemovePersonalDataPayloadQuery(_queryBuilder));
+            _queryBuilder.append('}');
+
+            return this;
+        }
+
+        /**
         * Update the selected delivery options for a delivery group.
         */
         public MutationQuery cartSelectedDeliveryOptionsUpdate(ID cartId, List<CartSelectedDeliveryOptionInput> selectedDeliveryOptions, CartSelectedDeliveryOptionsUpdatePayloadQueryDefinition queryDef) {
@@ -48966,6 +49433,17 @@ public class Storefront {
                         break;
                     }
 
+                    case "cartRemovePersonalData": {
+                        CartRemovePersonalDataPayload optional1 = null;
+                        if (!field.getValue().isJsonNull()) {
+                            optional1 = new CartRemovePersonalDataPayload(jsonAsObject(field.getValue(), key));
+                        }
+
+                        responseData.put(key, optional1);
+
+                        break;
+                    }
+
                     case "cartSelectedDeliveryOptionsUpdate": {
                         CartSelectedDeliveryOptionsUpdatePayload optional1 = null;
                         if (!field.getValue().isJsonNull()) {
@@ -49431,6 +49909,19 @@ public class Storefront {
         }
 
         /**
+        * Removes personally identifiable information from the cart.
+        */
+
+        public CartRemovePersonalDataPayload getCartRemovePersonalData() {
+            return (CartRemovePersonalDataPayload) get("cartRemovePersonalData");
+        }
+
+        public Mutation setCartRemovePersonalData(CartRemovePersonalDataPayload arg) {
+            optimisticData.put(getKey("cartRemovePersonalData"), arg);
+            return this;
+        }
+
+        /**
         * Update the selected delivery options for a delivery group.
         */
 
@@ -49739,6 +50230,8 @@ public class Storefront {
                 case "cartPaymentUpdate": return true;
 
                 case "cartPrepareForCompletion": return true;
+
+                case "cartRemovePersonalData": return true;
 
                 case "cartSelectedDeliveryOptionsUpdate": return true;
 
@@ -69981,6 +70474,15 @@ public class Storefront {
         }
 
         /**
+        * The URL for the customer account (only present if shop has a customer account vanity domain).
+        */
+        public ShopQuery customerAccountUrl() {
+            startField("customerAccountUrl");
+
+            return this;
+        }
+
+        /**
         * A description of the shop.
         */
         public ShopQuery description() {
@@ -70224,6 +70726,17 @@ public class Storefront {
                         break;
                     }
 
+                    case "customerAccountUrl": {
+                        String optional1 = null;
+                        if (!field.getValue().isJsonNull()) {
+                            optional1 = jsonAsString(field.getValue(), key);
+                        }
+
+                        responseData.put(key, optional1);
+
+                        break;
+                    }
+
                     case "description": {
                         String optional1 = null;
                         if (!field.getValue().isJsonNull()) {
@@ -70399,6 +70912,19 @@ public class Storefront {
 
         public Shop setBrand(Brand arg) {
             optimisticData.put(getKey("brand"), arg);
+            return this;
+        }
+
+        /**
+        * The URL for the customer account (only present if shop has a customer account vanity domain).
+        */
+
+        public String getCustomerAccountUrl() {
+            return (String) get("customerAccountUrl");
+        }
+
+        public Shop setCustomerAccountUrl(String arg) {
+            optimisticData.put(getKey("customerAccountUrl"), arg);
             return this;
         }
 
@@ -79753,9 +80279,19 @@ public class Storefront {
         AREA,
 
         /**
+        * Unit of measurements representing counts.
+        */
+        COUNT,
+
+        /**
         * Unit of measurements representing lengths.
         */
         LENGTH,
+
+        /**
+        * The type of measurement is unknown. Upgrade to the latest version of the API to resolve this type.
+        */
+        UNKNOWN,
 
         /**
         * Unit of measurements representing volumes.
@@ -79779,8 +80315,16 @@ public class Storefront {
                     return AREA;
                 }
 
+                case "COUNT": {
+                    return COUNT;
+                }
+
                 case "LENGTH": {
                     return LENGTH;
+                }
+
+                case "UNKNOWN": {
+                    return UNKNOWN;
                 }
 
                 case "VOLUME": {
@@ -79802,8 +80346,16 @@ public class Storefront {
                     return "AREA";
                 }
 
+                case COUNT: {
+                    return "COUNT";
+                }
+
                 case LENGTH: {
                     return "LENGTH";
+                }
+
+                case UNKNOWN: {
+                    return "UNKNOWN";
                 }
 
                 case VOLUME: {
@@ -79836,9 +80388,39 @@ public class Storefront {
         CM,
 
         /**
+        * Imperial system unit of volume (U.S. customary unit).
+        */
+        FLOZ,
+
+        /**
+        * 1 foot equals 12 inches.
+        */
+        FT,
+
+        /**
+        * Imperial system unit of area.
+        */
+        FT2,
+
+        /**
         * Metric system unit of weight.
         */
         G,
+
+        /**
+        * 1 gallon equals 128 fluid ounces (U.S. customary unit).
+        */
+        GAL,
+
+        /**
+        * Imperial system unit of length.
+        */
+        IN,
+
+        /**
+        * 1 item, a unit of count.
+        */
+        ITEM,
 
         /**
         * 1 kilogram equals 1000 grams.
@@ -79849,6 +80431,11 @@ public class Storefront {
         * Metric system unit of volume.
         */
         L,
+
+        /**
+        * Imperial system unit of weight.
+        */
+        LB,
 
         /**
         * Metric system unit of length.
@@ -79880,6 +80467,31 @@ public class Storefront {
         */
         MM,
 
+        /**
+        * 16 ounces equals 1 pound.
+        */
+        OZ,
+
+        /**
+        * 1 pint equals 16 fluid ounces (U.S. customary unit).
+        */
+        PT,
+
+        /**
+        * 1 quart equals 32 fluid ounces (U.S. customary unit).
+        */
+        QT,
+
+        /**
+        * The unit of measurement is unknown. Upgrade to the latest version of the API to resolve this unit.
+        */
+        UNKNOWN,
+
+        /**
+        * 1 yard equals 36 inches.
+        */
+        YD,
+
         UNKNOWN_VALUE;
 
         public static UnitPriceMeasurementMeasuredUnit fromGraphQl(String value) {
@@ -79896,8 +80508,32 @@ public class Storefront {
                     return CM;
                 }
 
+                case "FLOZ": {
+                    return FLOZ;
+                }
+
+                case "FT": {
+                    return FT;
+                }
+
+                case "FT2": {
+                    return FT2;
+                }
+
                 case "G": {
                     return G;
+                }
+
+                case "GAL": {
+                    return GAL;
+                }
+
+                case "IN": {
+                    return IN;
+                }
+
+                case "ITEM": {
+                    return ITEM;
                 }
 
                 case "KG": {
@@ -79906,6 +80542,10 @@ public class Storefront {
 
                 case "L": {
                     return L;
+                }
+
+                case "LB": {
+                    return LB;
                 }
 
                 case "M": {
@@ -79932,6 +80572,26 @@ public class Storefront {
                     return MM;
                 }
 
+                case "OZ": {
+                    return OZ;
+                }
+
+                case "PT": {
+                    return PT;
+                }
+
+                case "QT": {
+                    return QT;
+                }
+
+                case "UNKNOWN": {
+                    return UNKNOWN;
+                }
+
+                case "YD": {
+                    return YD;
+                }
+
                 default: {
                     return UNKNOWN_VALUE;
                 }
@@ -79947,8 +80607,32 @@ public class Storefront {
                     return "CM";
                 }
 
+                case FLOZ: {
+                    return "FLOZ";
+                }
+
+                case FT: {
+                    return "FT";
+                }
+
+                case FT2: {
+                    return "FT2";
+                }
+
                 case G: {
                     return "G";
+                }
+
+                case GAL: {
+                    return "GAL";
+                }
+
+                case IN: {
+                    return "IN";
+                }
+
+                case ITEM: {
+                    return "ITEM";
                 }
 
                 case KG: {
@@ -79957,6 +80641,10 @@ public class Storefront {
 
                 case L: {
                     return "L";
+                }
+
+                case LB: {
+                    return "LB";
                 }
 
                 case M: {
@@ -79981,6 +80669,26 @@ public class Storefront {
 
                 case MM: {
                     return "MM";
+                }
+
+                case OZ: {
+                    return "OZ";
+                }
+
+                case PT: {
+                    return "PT";
+                }
+
+                case QT: {
+                    return "QT";
+                }
+
+                case UNKNOWN: {
+                    return "UNKNOWN";
+                }
+
+                case YD: {
+                    return "YD";
                 }
 
                 default: {
